@@ -5,7 +5,7 @@
   "class": "remote",
   "capabilities": [
     "measure_battery",
-    "button"
+    "onoff"
   ],
   "energy": {
     "batteries": ["OTHER"]
@@ -28,6 +28,16 @@
     "productId": [
       1
     ],
-    "zwaveAllianceProductId": 528
+    "zwaveAllianceProductId": 528,
+    "learnmode": {
+      "image": "{{driverAssetsPath}}/learnmode.svg",
+      "instruction": {
+        "en": "Press the button on your Z-Uno device three times"
+      }
+    },
+    "associationGroups": [
+      1,
+      2
+    ]
   }
 }

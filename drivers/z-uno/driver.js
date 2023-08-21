@@ -8,6 +8,7 @@ class MyDriver extends Driver {
    * onInit is called when the driver is initialized.
    */
   async onInit() {
+    super.onInit();
     this.log('MyDriver has been initialized');
   }
 

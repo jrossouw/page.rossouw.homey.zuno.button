@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
-  "brandColor": "#000000",
+  "brandColor": "#A0A0A0",
   "platforms": [
     "local"
   ],
@@ -35,7 +35,7 @@
       "class": "remote",
       "capabilities": [
         "measure_battery",
-        "button"
+        "onoff"
       ],
       "energy": {
         "batteries": [
@@ -60,7 +60,17 @@
         "productId": [
           1
         ],
-        "zwaveAllianceProductId": 528
+        "zwaveAllianceProductId": 528,
+        "learnmode": {
+          "image": "/drivers/z-uno/assets/learnmode.svg",
+          "instruction": {
+            "en": "Press the button on your Z-Uno device three times"
+          }
+        },
+        "associationGroups": [
+          1,
+          2
+        ]
       },
       "id": "z-uno",
       "settings": []
