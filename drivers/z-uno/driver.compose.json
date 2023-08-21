@@ -1,0 +1,30 @@
+{
+  "name": {
+    "en": "z-uno"
+  },
+  "class": "remote",
+  "capabilities": [
+    "measure_battery",
+    "button"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "zwave"
+  ],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png"
+  },
+  "zwave": {
+    "manufacturerId": 277,
+    "productTypeId": [
+      528
+    ],
+    "productId": [
+      1
+    ],
+    "zwaveAllianceProductId": 528
+  }
+}
