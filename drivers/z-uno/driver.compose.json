@@ -7,6 +7,9 @@
     "measure_battery",
     "button"
   ],
+  "energy": {
+    "batteries": ["OTHER"]
+  },
   "platforms": [
     "local"
   ],
