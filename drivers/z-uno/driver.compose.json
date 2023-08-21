@@ -39,5 +39,30 @@
       1,
       2
     ]
-  }
+  },
+  "settings": [
+    {
+      "id": "always_on",
+      "type": "checkbox",
+      "zwave": {
+        "index": 1,
+        "size": 1
+      },
+      "label": {
+        "en": "Always on"
+      },
+      "value": false,
+      "hint": {
+        "en": "Once activated, will keep a connected device constantly on, will stop reacting to alarm frames and B-button push"
+      }
+    },
+    {
+      "id": "poll_interval",
+      "type": "number",
+      "label": {
+        "en": "Poll Interval"
+      },
+      "value": 3000
+    }
+  ]
 }
