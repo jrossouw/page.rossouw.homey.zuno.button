@@ -1,0 +1,28 @@
+{
+  "id": "page.rossouw.homey.zuno.button",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Z-Uno Button"
+  },
+  "description": {
+    "en": "Adds support for custom Z-Uno application for Homey Pro"
+  },
+  "category": [
+    "security"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Johan Rossouw",
+    "email": "johan@rossouw.page"
+  }
+}

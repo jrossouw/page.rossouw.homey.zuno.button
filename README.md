@@ -1,2 +1,3 @@
-# page.rossouw.homey.zuno.button
-Simple Homey Pro app for Z-Uno button
+# Z-Uno Button
+
+Adds support for custom Z-Uno application for Homey Pro
