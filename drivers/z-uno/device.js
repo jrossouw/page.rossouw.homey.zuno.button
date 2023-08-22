@@ -61,17 +61,6 @@ class MyDevice extends ZwaveDevice {
     return 'Success!';
   }
 
-  /**
-    * onInit is called when the device is initialized.
-    */
-  async onInit() {
-    this.registerCapabilityListener('onoff', async (value) => {
-      await this.setCapabilityValue({ on: value });
-      this._setCapabilityValue('onoff', 'SWITCH_BINARY', value);
-    });
-    this.log('MyDevice has been initialized');
-  }
-
 }
 
 module.exports = MyDevice;
