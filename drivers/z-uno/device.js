@@ -11,10 +11,6 @@ class MyDevice extends ZwaveDevice {
     // print the node's info to the console
     this.printNode();
 
-    // register the `measure_battery` capability with COMMAND_CLASS_BATTERY and with the
-    // default system capability handler (see: lib/zwave/system/capabilities)
-    this.registerCapability('measure_battery', 'BATTERY');
-
     // register the `onoff` capability with COMMAND_CLASS_SWITCH_BINARY while overriding the default system
     // capability handler
     this.registerCapability('onoff', 'SWITCH_BINARY', {
@@ -29,14 +25,30 @@ class MyDevice extends ZwaveDevice {
     });
 
     this.registerCapabilityListener('onoff', async (value, opts) => {
-      console.log(`Sending ${value} to 1`);
+      console.log(`Sending ${value}`);
       try {
-        console.log(this.node.MultiChannelNodes[2]);
-        await this.node.MultiChannelNodes[2].CommandClass.COMMAND_CLASS_BASIC.BASIC_SET({ Value: Math.round(value) });
+        console.log(this.node.MultiChannelNodes[1].CommandClass.COMMAND_CLASS_SWITCH_BINARY.SWITCH_BINARY_SET);
+        const result = this.node.MultiChannelNodes[1].CommandClass.COMMAND_CLASS_SWITCH_BINARY.SWITCH_BINARY_GET();
+        this.log(result);
+        await this.node.MultiChannelNodes[1].CommandClass.COMMAND_CLASS_SWITCH_BINARY.SWITCH_BINARY_SET({
+          'Target Value': value ? 'on/enable' : 'off/disable',
+          'Duration': 'Default',
+        });
         return Promise.resolve();
       } catch (err) {
+        console.log(err);
         return Promise.reject(err);
       }
+    });
+
+    this.registerCapability('measure_voltage', 'SENSOR_MULTILEVEL', {
+      multiChannelNodeId: 2,
+      get: 'SENSOR_MULTILEVEL_GET',
+      getOpts: {
+        getOnStart: false,
+      },
+      report: 'SENSOR_MULTILEVEL_REPORT',
+      reportParser: (report) => this.VoltageReportParser(report),
     });
 
     // register a settings parser
@@ -47,7 +59,7 @@ class MyDevice extends ZwaveDevice {
       'SWITCH_BINARY',
       'SWITCH_BINARY_REPORT',
       (rawReport, parsedReport) => {
-        console.log('registerReportListener', rawReport, parsedReport);
+        this.log('registerReportListener', rawReport, parsedReport);
       },
     );
 
@@ -58,6 +70,14 @@ class MyDevice extends ZwaveDevice {
     await this.configurationSet({ index: 1, size: 2 }, 10);
 
     this.log('MyDevice onNodeInit');
+  }
+
+  VoltageReportParser(report) {
+    this.log('Received report');
+    this.log(report);
+    const voltageValue = report['Sensor Value (Parsed)'];
+    this.log('Voltage value', voltageValue);
+    return voltageValue;
   }
 
   // Overwrite the default setting save message

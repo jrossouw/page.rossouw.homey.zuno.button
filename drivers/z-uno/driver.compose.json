@@ -4,8 +4,8 @@
   },
   "class": "remote",
   "capabilities": [
-    "measure_battery",
-    "onoff"
+    "onoff",
+    "measure_voltage"
   ],
   "energy": {
     "batteries": ["OTHER"]
