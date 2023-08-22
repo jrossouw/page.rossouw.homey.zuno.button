@@ -1,25 +1,23 @@
 
-#define LED_PIN 12
-
-byte switchValue = 0;
+byte switchValue = 1;
+word lastVoltageValue = 0;
 
 ZUNO_SETUP_PRODUCT_ID(0x00, 0x01);
-ZUNO_SETUP_BATTERY_HANDLER(my_battery_handler);
+
+enum{
+  SWITCH_CHANNEL = 1,
+  BATTERY_VOLTAGE_CHANNEL
+};
 
 ZUNO_SETUP_CHANNELS(
-  ZUNO_SWITCH_BINARY(switchValue, NULL)
+  ZUNO_SWITCH_BINARY(switchValue, NULL),
+  ZUNO_SENSOR_MULTILEVEL(ZUNO_SENSOR_MULTILEVEL_TYPE_VOLTAGE, SENSOR_MULTILEVEL_SCALE_VOLT, 2, 2, lastVoltageValue)
 );
 
 ZUNO_SETUP_SLEEPING_MODE(ZUNO_SLEEPING_MODE_ALWAYS_AWAKE);
 
-byte my_battery_handler() {
-  byte percents = 50 + random(50);
-  return percents;
-}
-
 void setup() {
   Serial.begin(115200);
-  pinMode(LED_PIN, OUTPUT);
 }
 
 unsigned long lastReport = 0;
@@ -28,11 +26,14 @@ void loop() {
 
   unsigned long now = millis();
 
-  digitalWrite(LED_PIN, switchValue == 0 ? LOW : HIGH);
   if (now > lastLog + 2000) {
     lastLog = now;
     Serial.print("Switch value: ");
     Serial.println(switchValue == 0 ? "LOW" : "HIGH");
+    lastVoltageValue = 300 + random(200);
+    Serial.print("Battery voltage: ");
+    Serial.println(lastVoltageValue / 100.0f);
+    zunoSendReport(BATTERY_VOLTAGE_CHANNEL);
   }
 
 }
