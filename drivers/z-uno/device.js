@@ -18,6 +18,7 @@ class MyDevice extends ZwaveDevice {
     // register the `onoff` capability with COMMAND_CLASS_SWITCH_BINARY while overriding the default system
     // capability handler
     this.registerCapability('onoff', 'SWITCH_BINARY', {
+      multiChannelNodeId: 1,
       getOpts: {
         // Only use these options when a device doesn't automatically report its values
         getOnStart: true, // get the initial value on app start (only use for non-battery devices)
@@ -25,6 +26,17 @@ class MyDevice extends ZwaveDevice {
         pollInterval: 'poll_interval', // maps to device settings
       },
       getParserV3: (value, opts) => ({}),
+    });
+
+    this.registerCapabilityListener('onoff', async (value, opts) => {
+      console.log(`Sending ${value} to 1`);
+      try {
+        console.log(this.node.MultiChannelNodes[2]);
+        await this.node.MultiChannelNodes[2].CommandClass.COMMAND_CLASS_BASIC.BASIC_SET({ Value: Math.round(value) });
+        return Promise.resolve();
+      } catch (err) {
+        return Promise.reject(err);
+      }
     });
 
     // register a settings parser
