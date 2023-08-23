@@ -45,7 +45,7 @@ class MyDevice extends ZwaveDevice {
       multiChannelNodeId: 2,
       get: 'SENSOR_MULTILEVEL_GET',
       getOpts: {
-        getOnStart: false,
+        getOnStart: true,
       },
       report: 'SENSOR_MULTILEVEL_REPORT',
       reportParser: (report) => this.multiChannelReportParser(report, 2),
@@ -53,7 +53,7 @@ class MyDevice extends ZwaveDevice {
 
     this.registerCapability('alarm_motion', 'ALARM', {
       multiChannelNodeId: 3,
-      get: 'SENSOR_BINARY_GET',
+      get: 'SENSOR_ALARM_GET',
       getOpts: {
         getOnStart: true,
       },
@@ -82,7 +82,8 @@ class MyDevice extends ZwaveDevice {
       this.log('Voltage value ', value);
     }
     if (channel === 3) {
-      value = true;
+      const level = report['Alarm level'];
+      value = level === 0;
       this.log('Alarm level ', value);
     }
     return value;
