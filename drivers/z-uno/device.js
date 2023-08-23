@@ -48,20 +48,21 @@ class MyDevice extends ZwaveDevice {
         getOnStart: false,
       },
       report: 'SENSOR_MULTILEVEL_REPORT',
-      reportParser: (report) => this.VoltageReportParser(report),
+      reportParser: (report) => this.multiChannelReportParser(report, 2),
+    });
+
+    this.registerCapability('alarm_motion', 'ALARM', {
+      multiChannelNodeId: 3,
+      get: 'SENSOR_BINARY_GET',
+      getOpts: {
+        getOnStart: true,
+      },
+      report: 'ALARM_REPORT',
+      reportParser: (report) => this.multiChannelReportParser(report, 3),
     });
 
     // register a settings parser
     this.registerSetting('always_on', (value) => new Buffer([value === true ? 0 : 1]));
-
-    // register a report listener
-    this.registerReportListener(
-      'SWITCH_BINARY',
-      'SWITCH_BINARY_REPORT',
-      (rawReport, parsedReport) => {
-        this.log('registerReportListener', rawReport, parsedReport);
-      },
-    );
 
     // Set configuration value that is defined in manifest
     await this.configurationSet({ id: 'motion_threshold' }, 10);
@@ -72,12 +73,19 @@ class MyDevice extends ZwaveDevice {
     this.log('MyDevice onNodeInit');
   }
 
-  VoltageReportParser(report) {
+  multiChannelReportParser(report, channel) {
     this.log('Received report');
     this.log(report);
-    const voltageValue = report['Sensor Value (Parsed)'];
-    this.log('Voltage value', voltageValue);
-    return voltageValue;
+    let value = null;
+    if (channel === 2) {
+      value = report['Sensor Value (Parsed)'];
+      this.log('Voltage value ', value);
+    }
+    if (channel === 3) {
+      value = true;
+      this.log('Alarm level ', value);
+    }
+    return value;
   }
 
   // Overwrite the default setting save message

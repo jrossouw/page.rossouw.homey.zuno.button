@@ -35,7 +35,8 @@
       "class": "remote",
       "capabilities": [
         "onoff",
-        "measure_voltage"
+        "measure_voltage",
+        "alarm_motion"
       ],
       "energy": {
         "batteries": [
