@@ -16,9 +16,7 @@ class MyDevice extends ZwaveDevice {
     this.registerCapability('onoff', 'SWITCH_BINARY', {
       multiChannelNodeId: 1,
       getOpts: {
-        // Only use these options when a device doesn't automatically report its values
-        getOnStart: true, // get the initial value on app start (only use for non-battery devices)
-        // getOnOnline: true, // use only for battery devices
+        getOnOnline: true,
         pollInterval: 'poll_interval', // maps to device settings
       },
       getParserV3: (value, opts) => ({}),
@@ -28,7 +26,7 @@ class MyDevice extends ZwaveDevice {
       multiChannelNodeId: 2,
       get: 'SENSOR_MULTILEVEL_GET',
       getOpts: {
-        getOnStart: true,
+        getOnOnline: true,
       },
       report: 'SENSOR_MULTILEVEL_REPORT',
       reportParser: (report) => this.multiChannelReportParser(report, 2),
@@ -36,9 +34,9 @@ class MyDevice extends ZwaveDevice {
 
     this.registerCapability('alarm_motion', 'ALARM', {
       multiChannelNodeId: 3,
-      get: 'SENSOR_ALARM_GET',
+      get: 'ALARM_GET',
       getOpts: {
-        getOnStart: false,
+        getOnOnline: true,
       },
       report: 'ALARM_REPORT',
       reportParser: (report) => this.multiChannelReportParser(report, 3),
@@ -56,11 +54,23 @@ class MyDevice extends ZwaveDevice {
       this.log('Voltage value ', value);
     }
     if (channel === 3) {
-      const level = report['Alarm level'];
-      value = level === 0;
+      this.log(report['Alarm Level (Raw)'][0]);
+      value = true;
       this.log('Alarm level ', value);
     }
     return value;
+  }
+
+  async getAlarmValue() {
+    try {
+      const answer = await this.node.MultiChannelNodes['3'].CommandClass['COMMAND_CLASS_ALARM'].ALARM_GET();
+      this.log('Alarm GET Answer: ');
+      this.log(answer['Alarm Level (Raw)'][0]);
+      return answer;
+    } catch (err) {
+      this.error(err);
+      return 0;
+    }
   }
 
   // Overwrite the default setting save message

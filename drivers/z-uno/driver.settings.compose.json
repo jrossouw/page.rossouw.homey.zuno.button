@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "64",
+    "type": "number",
+    "label": { "en": "Driveway movement timeout" },
+    "value": 1,
+    "attr": { "min": 1,"max": 98 },
+    "hint": { "en": "This parameter determines the time in seconds for the movement alarm to reset." },
+    "zwave": {
+      "index": 13,
+      "size": 1
+    }
+  }
+]
