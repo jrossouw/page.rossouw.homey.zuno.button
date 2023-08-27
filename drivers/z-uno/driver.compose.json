@@ -26,38 +26,6 @@
     "productTypeId": [528],
     "productId": [1],
     "zwaveAllianceProductId": 528,
-    "multiChannelNodes": {
-      "1": {
-        "name": { "en": "Light Switch" },
-        "class": "light",
-        "capabilities": ["onoff"],
-        "icon": "/drivers/<driver_id>/assets/icon.svg",
-        "settings": []
-      },
-      "2": {
-        "name": { "en": "Battery Voltage" },
-        "class": "sensor",
-        "capabilities": ["measure_voltage"],
-        "icon": "/drivers/<driver_id>/assets/icon.svg",
-        "settings": []
-      },
-      "3": {
-        "name": { "en": "Motion Sensor" },
-        "class": "sensor",
-        "capabilities": ["alarm_motion"],
-        "icon": "/drivers/<driver_id>/assets/icon.svg",
-        "settings": [
-          {
-            "id": "reset_time",
-            "type": "number",
-            "label": {
-              "en": "Time before sensor resets"
-            },
-            "value": 30
-          }
-        ]
-      }
-    },
     "learnmode": {
       "image": "{{driverAssetsPath}}/learnmode.svg",
       "instruction": {

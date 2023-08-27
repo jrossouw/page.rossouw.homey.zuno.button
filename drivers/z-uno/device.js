@@ -4,15 +4,15 @@ const { ZwaveDevice } = require('homey-zwavedriver');
 
 class MyDevice extends ZwaveDevice {
 
-  async onMeshInit() {
+  onNodeInit({ node }) {
     // enable debugging
     this.enableDebug();
 
     // print the node's info to the console
     this.printNode();
 
-    // register the `onoff` capability with COMMAND_CLASS_SWITCH_BINARY while overriding the default system
-    // capability handler
+    this.log(node);
+
     this.registerCapability('onoff', 'SWITCH_BINARY', {
       multiChannelNodeId: 1,
       getOpts: {
@@ -22,23 +22,6 @@ class MyDevice extends ZwaveDevice {
         pollInterval: 'poll_interval', // maps to device settings
       },
       getParserV3: (value, opts) => ({}),
-    });
-
-    this.registerCapabilityListener('onoff', async (value, opts) => {
-      console.log(`Sending ${value}`);
-      try {
-        console.log(this.node.MultiChannelNodes[1].CommandClass.COMMAND_CLASS_SWITCH_BINARY.SWITCH_BINARY_SET);
-        const result = this.node.MultiChannelNodes[1].CommandClass.COMMAND_CLASS_SWITCH_BINARY.SWITCH_BINARY_GET();
-        this.log(result);
-        await this.node.MultiChannelNodes[1].CommandClass.COMMAND_CLASS_SWITCH_BINARY.SWITCH_BINARY_SET({
-          'Target Value': value ? 'on/enable' : 'off/disable',
-          'Duration': 'Default',
-        });
-        return Promise.resolve();
-      } catch (err) {
-        console.log(err);
-        return Promise.reject(err);
-      }
     });
 
     this.registerCapability('measure_voltage', 'SENSOR_MULTILEVEL', {
@@ -55,20 +38,11 @@ class MyDevice extends ZwaveDevice {
       multiChannelNodeId: 3,
       get: 'SENSOR_ALARM_GET',
       getOpts: {
-        getOnStart: true,
+        getOnStart: false,
       },
       report: 'ALARM_REPORT',
       reportParser: (report) => this.multiChannelReportParser(report, 3),
     });
-
-    // register a settings parser
-    this.registerSetting('always_on', (value) => new Buffer([value === true ? 0 : 1]));
-
-    // Set configuration value that is defined in manifest
-    await this.configurationSet({ id: 'motion_threshold' }, 10);
-
-    // Or set configuration value that is not defined in manifest
-    await this.configurationSet({ index: 1, size: 2 }, 10);
 
     this.log('MyDevice onNodeInit');
   }
