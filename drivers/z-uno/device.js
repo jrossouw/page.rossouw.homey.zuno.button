@@ -2,44 +2,64 @@
 
 const { ZwaveDevice } = require('homey-zwavedriver');
 
+const alarm_channel = 1;
+const switch_channel = 2;
+const voltage_channel = 3;
+
 class MyDevice extends ZwaveDevice {
 
   onNodeInit({ node }) {
+
     // enable debugging
     this.enableDebug();
 
-    // print the node's info to the console
+    this.log('Print the node info to the console');
     this.printNode();
 
+    this.log('Log node');
     this.log(node);
 
-    this.registerCapability('onoff', 'SWITCH_BINARY', {
-      multiChannelNodeId: 1,
+    this.registerCapability('alarm_motion', 'NOTIFICATION', {
+      multiChannelNodeId: alarm_channel,
+      get: 'ALARM_GET',
+      getOpts: {
+        getOnOnline: true,
+      },
+    });
+
+    this.registerReportListener('NOTIFICATION', 'NOTIFICATION_REPORT', (report) => {
+      if (report) {
+        switch (report['Notification Type']) {
+          case 'Home Security':
+            this.log(report);
+            this.setCapabilityValue('alarm_motion', report['Event'] !== 0);
+            break;
+          default:
+          // Do nothing
+        }
+      }
+    });
+
+
+    this.registerCapability('onoff', 'BASIC', {
+      multiChannelNodeId: switch_channel,
+      get: 'BASIC_GET',
+      set: 'BASIC_SET',
+      report: 'BASIC_REPORT',
       getOpts: {
         getOnOnline: true,
         pollInterval: 'poll_interval', // maps to device settings
       },
-      getParserV3: (value, opts) => ({}),
     });
 
     this.registerCapability('measure_voltage', 'SENSOR_MULTILEVEL', {
-      multiChannelNodeId: 2,
+      multiChannelNodeId: 3,
       get: 'SENSOR_MULTILEVEL_GET',
       getOpts: {
         getOnOnline: true,
       },
       report: 'SENSOR_MULTILEVEL_REPORT',
-      reportParser: (report) => this.multiChannelReportParser(report, 2),
-    });
-
-    this.registerCapability('alarm_motion', 'ALARM', {
-      multiChannelNodeId: 3,
-      get: 'ALARM_GET',
-      getOpts: {
-        getOnOnline: true,
-      },
-      report: 'ALARM_REPORT',
-      reportParser: (report) => this.multiChannelReportParser(report, 3),
+      reportParser: (report) => this.multiChannelReportParser(report, voltage_channel),
     });
 
     this.log('MyDevice onNodeInit');
@@ -49,11 +69,11 @@ class MyDevice extends ZwaveDevice {
     this.log('Received report');
     this.log(report);
     let value = null;
-    if (channel === 2) {
+    if (channel === voltage_channel) {
       value = report['Sensor Value (Parsed)'];
       this.log('Voltage value ', value);
     }
-    if (channel === 3) {
+    if (channel === alarm_channel) {
       this.log(report['Alarm Level (Raw)'][0]);
       value = true;
       this.log('Alarm level ', value);
