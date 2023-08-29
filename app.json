@@ -71,9 +71,60 @@
         "associationGroups": [
           1,
           2
+        ],
+        "defaultConfiguration": [
+          {
+            "id": 64,
+            "size": 1,
+            "value": 10
+          },
+          {
+            "id": 65,
+            "size": 1,
+            "value": 0
+          }
         ]
       },
-      "settings": [],
+      "settings": [
+        {
+          "id": "64",
+          "type": "number",
+          "label": {
+            "en": "Driveway movement re-trigger delay"
+          },
+          "value": 1,
+          "attr": {
+            "min": 1,
+            "max": 60
+          },
+          "hint": {
+            "en": "This parameter determines the time in seconds before another movement alarm is triggered."
+          },
+          "zwave": {
+            "index": 64,
+            "size": 1
+          }
+        },
+        {
+          "id": "65",
+          "type": "number",
+          "label": {
+            "en": "Driveway light timeout"
+          },
+          "value": 1,
+          "attr": {
+            "min": 1,
+            "max": 60
+          },
+          "hint": {
+            "en": "This parameter determines the time in minutes for the driveway lights to automatically turn off."
+          },
+          "zwave": {
+            "index": 65,
+            "size": 1
+          }
+        }
+      ],
       "id": "z-uno"
     }
   ]
