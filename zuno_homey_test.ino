@@ -3,6 +3,7 @@
 #define SWITCH_ON 0xff
 #define SWITCH_OFF 0
 
+ZUNO_ENABLE(LOGGING_DBG);
 ZUNO_SETUP_PRODUCT_ID(0x00, 0x01);
 ZUNO_SETUP_SLEEPING_MODE(ZUNO_SLEEPING_MODE_ALWAYS_AWAKE);
 ZUNO_SETUP_ASSOCIATIONS(ZUNO_ASSOCIATION_GROUP_SET_VALUE);
@@ -48,6 +49,7 @@ void config_parameter_changed(uint8_t param, uint32_t value) {
 
 void setup() {
   Serial.begin(115200);
+  Serial.println();
   Serial.println("Booting!");
   retriggerTimeout = zunoLoadCFGParam(64);
   lightAutoOffTimeout  = zunoLoadCFGParam(65);
@@ -61,6 +63,11 @@ void setup() {
     lightAutoOffTimeout = 0;
     zunoSaveCFGParam(65, lightAutoOffTimeout);
   }
+
+  Serial.print("Auto off time: ");
+  Serial.println(lightAutoOffTimeout);
+  Serial.print("Motion retrigger delay: ");
+  Serial.println(retriggerTimeout);
 }
 
 unsigned long lastReport = 0;
@@ -82,7 +89,7 @@ void loop() {
   }
 
   if (switchValue != 0 && lightsSwichedOnTime>0) {
-    if (now > lightsSwichedOnTime + 1000*lightAutoOffTimeout) {
+    if (now > lightsSwichedOnTime + 60000*lightAutoOffTimeout) {
       Serial.println("Switching lights off!");
       switchValue = 0;
       lightsSwichedOnTime = 0;

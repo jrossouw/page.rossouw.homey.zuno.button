@@ -66,9 +66,6 @@ class MyDevice extends ZwaveDevice {
       reportParser: (report) => this.multiChannelReportParser(report, voltage_channel),
     });
 
-    this.registerSetting('64', value => new Buffer([value]));
-    this.registerSetting('65', value => new Buffer([value]));
-
     this.log('MyDevice onNodeInit');
   }
 
@@ -96,31 +93,6 @@ class MyDevice extends ZwaveDevice {
     } catch (err) {
       this.error(err);
     }
-  }
-
-  async getAlarmValue() {
-    try {
-      const answer = await this.node.MultiChannelNodes['3'].CommandClass['COMMAND_CLASS_ALARM'].ALARM_GET();
-      this.log('Alarm GET Answer: ');
-      this.log(answer['Alarm Level (Raw)'][0]);
-      return answer;
-    } catch (err) {
-      this.error(err);
-      return 0;
-    }
-  }
-
-  // Overwrite the default setting save message
-  customSaveMessage(oldSettings, newSettings, changedKeysArr) {
-    return {
-      en: 'Test message',
-    };
-  }
-
-  // Overwrite the onSettings method, and change the Promise result
-  async onSettings(oldSettings, newSettings, changedKeysArr) {
-    await super.onSettings(oldSettings, newSettings, changedKeysArr);
-    return 'Success!';
   }
 
 }

@@ -1,9 +1,9 @@
 [
   {
-    "id": "64",
+    "id": "motion_delay",
     "type": "number",
-    "label": { "en": "Driveway movement re-trigger delay" },
-    "value": 1,
+    "label": { "en": "Driveway motion re-trigger delay" },
+    "value": 15,
     "attr": { "min": 1,"max": 60 },
     "hint": { "en": "This parameter determines the time in seconds before another movement alarm is triggered." },
     "zwave": {
@@ -12,10 +12,10 @@
     }
   },
   {
-    "id": "65",
+    "id": "light_timeout",
     "type": "number",
     "label": { "en": "Driveway light timeout" },
-    "value": 1,
+    "value": 5,
     "attr": { "min": 1,"max": 60 },
     "hint": { "en": "This parameter determines the time in minutes for the driveway lights to automatically turn off." },
     "zwave": {

@@ -87,12 +87,12 @@
       },
       "settings": [
         {
-          "id": "64",
+          "id": "motion_delay",
           "type": "number",
           "label": {
-            "en": "Driveway movement re-trigger delay"
+            "en": "Driveway motion re-trigger delay"
           },
-          "value": 1,
+          "value": 15,
           "attr": {
             "min": 1,
             "max": 60
@@ -106,12 +106,12 @@
           }
         },
         {
-          "id": "65",
+          "id": "light_timeout",
           "type": "number",
           "label": {
             "en": "Driveway light timeout"
           },
-          "value": 1,
+          "value": 5,
           "attr": {
             "min": 1,
             "max": 60
