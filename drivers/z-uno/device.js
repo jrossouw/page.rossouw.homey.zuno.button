@@ -40,16 +40,20 @@ class MyDevice extends ZwaveDevice {
       }
     });
 
-
-    this.registerCapability('onoff', 'BASIC', {
+    this.registerCapability('onoff', 'SWITCH_BINARY', {
       multiChannelNodeId: switch_channel,
-      get: 'BASIC_GET',
-      set: 'BASIC_SET',
-      report: 'BASIC_REPORT',
+      get: 'SWITCH_BINARY_GET',
+      set: 'SWITCH_BINARY_SET',
+      report: 'SWITCH_BINARY_REPORT',
       getOpts: {
         getOnOnline: true,
         pollInterval: 'poll_interval', // maps to device settings
       },
+      setParserV1: (input) => {
+        this.log('SetParser:', input);
+        this.setSwitch(input);
+      },
+      reportParser: (report) => this.multiChannelReportParser(report, switch_channel),
     });
 
     this.registerCapability('measure_voltage', 'SENSOR_MULTILEVEL', {
@@ -61,6 +65,9 @@ class MyDevice extends ZwaveDevice {
       report: 'SENSOR_MULTILEVEL_REPORT',
       reportParser: (report) => this.multiChannelReportParser(report, voltage_channel),
     });
+
+    this.registerSetting('64', value => new Buffer([value]));
+    this.registerSetting('65', value => new Buffer([value]));
 
     this.log('MyDevice onNodeInit');
   }
@@ -79,6 +86,16 @@ class MyDevice extends ZwaveDevice {
       this.log('Alarm level ', value);
     }
     return value;
+  }
+
+  async setSwitch(value) {
+    try {
+      const switchNode = this.node.MultiChannelNodes['2'];
+      this.log(switchNode);
+      await switchNode.CommandClass.COMMAND_CLASS_BASIC.BASIC_SET({ Value: value });
+    } catch (err) {
+      this.error(err);
+    }
   }
 
   async getAlarmValue() {
